@@ -10,6 +10,7 @@ import logo from '../assets/images/logo.png'
 import loader from '../assets/images/loader.gif'
 import end from '../assets/images/end.gif'
 import errorGif from '../assets/images/error.gif'
+import { useLocation } from 'react-router';
 
 
 
@@ -42,6 +43,8 @@ const Home = () => {
   const [chars, setChars] = useState([])
   const [page, setPage] = useState(1)
   const [searchterm, setSearchterm] = useState("")
+  const { pathname } = useLocation();
+
 
 
 
@@ -60,9 +63,8 @@ const Home = () => {
   }
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-    setPage(1)
-  }, [])
+    setPage(0)
+  }, [pathname])
 
   useEffect(() => {
     setPage(1)
@@ -93,7 +95,7 @@ const Home = () => {
           <InfiniteScroll
             dataLength={chars.length}
             next={fetchMoreChars}
-            hasMore={page < 43 ? true : false}
+            hasMore={page < 3 ? true : false}
             loader={<div className="loaderContainer">
               <img src={loader} className="gif" alt="loader" />
               <div className="text">Loading...</div>
