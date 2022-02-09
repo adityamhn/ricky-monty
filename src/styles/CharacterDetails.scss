@@ -1,0 +1,95 @@
+.characterDetailsContainer {
+    padding-bottom: 5rem;
+    min-height: 100vh;
+    .header {
+        padding: 1rem 2rem;
+        display: flex;
+        align-items: center;
+
+        @media only screen and (max-width: 300px) {
+            padding: 1rem 0.5rem;
+        }
+        .logo {
+            width: 10rem;
+        }
+
+        .backIcon {
+            font-size: 1.6rem;
+            margin-right: 0.5rem;
+            color: #2d2d2d;
+            cursor: pointer;
+        }
+    }
+
+    .detailsSection {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 2rem;
+
+        .avatar {
+            width: 20rem;
+            height: 20rem;
+            object-fit: cover;
+            border-radius: 50%;
+
+            @media only screen and (max-width: 370px) {
+                width: 15rem;
+                height: 15rem;
+            }
+        }
+
+        .name {
+            font-size: 2.2rem;
+            margin-bottom: 0.2rem;
+
+            @media only screen and (max-width: 370px) {
+                font-size: 1.8rem;
+            }
+        }
+
+        .id {
+            margin-bottom: 1rem;
+        }
+
+        .features {
+            margin-top: 0.8rem;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            text-align: center;
+            .feature {
+                margin: 0.8rem 2rem;
+                font-size: 1.3rem;
+
+                @media only screen and (max-width: 370px) {
+                    font-size: 1.1rem;
+                }
+                .feature-name {
+                    opacity: 0.5;
+                    font-size: 1rem;
+
+                    @media only screen and (max-width: 370px) {
+                        font-size: 0.9rem;
+                    }
+                }
+            }
+        }
+
+        .secitonTitle {
+            margin-top: 3rem;
+        }
+    }
+}
+
+.deetLoader {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+
+    .gif {
+        width: 16rem;
+    }
+}

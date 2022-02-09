@@ -1,0 +1,76 @@
+.cardContainer {
+    width: 15rem;
+    background-color: #1d1d1d;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    padding-top: 2rem;
+    color: #f3f3f3;
+    margin: 1rem;
+    text-align: center;
+    position: relative;
+
+    &:hover {
+        transform: scale(1.05);
+        box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    }
+
+    .avatar {
+        width: 7rem;
+        height: 7rem;
+        border-radius: 50%;
+        object-fit: cover;
+
+        @media only screen and (max-width: 430px) {
+            width: 5.5rem;
+            height: 5.5rem;
+        }
+    }
+
+    .id {
+        position: absolute;
+        top: 5px;
+        left: 10px;
+        font-weight: bold;
+    }
+
+    .name {
+        font-size: 1.3rem;
+        margin-bottom: 0.2rem;
+        font-weight: 600;
+
+        @media only screen and (max-width: 430px) {
+            font-size: 1.1rem;
+        }
+    }
+
+    .features {
+        margin-top: 0.8rem;
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        .feature {
+            margin: 0.8rem 1rem;
+            @media only screen and (max-width: 430px) {
+                font-size: 0.9rem;
+            }
+            .feature-name {
+                opacity: 0.5;
+                font-size: 0.7rem;
+
+                @media only screen and (max-width: 430px) {
+                    font-size: 0.6rem;
+                }
+            }
+        }
+    }
+
+    .species {
+        margin: 0.3rem 0rem;
+    }
+}
