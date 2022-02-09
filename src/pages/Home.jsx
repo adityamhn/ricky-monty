@@ -18,6 +18,10 @@ import { useLocation } from 'react-router';
 const getAllCharacters = gql`
 query Characters($page: Int, $name: String) {
   characters(page:$page,filter : {name: $name}) {
+    info {
+      next
+      count
+    }
     results  {
       id
       name
@@ -44,6 +48,7 @@ const Home = () => {
   const [page, setPage] = useState(1)
   const [searchterm, setSearchterm] = useState("")
   const { pathname } = useLocation();
+  const [completed, setCompleted] = useState(false)
 
 
 
@@ -55,6 +60,9 @@ const Home = () => {
     },
     onCompleted: (data) => {
       setChars(chars.concat(data.characters.results))
+      if (!data.characters.info.next) {
+        setCompleted(true)
+      }
     }
   });
 
@@ -76,6 +84,15 @@ const Home = () => {
     }
   }, [searchterm])
 
+  if (chars.length === 0 && !searchterm && loading) {
+    return (
+      <div className="loaderContainer">
+        <img src={loader} className="gif" alt="loader" />
+        <div className="text">Loading...</div>
+      </div>
+    )
+  }
+
   return (
     <>
       <div className="homeContainer">
@@ -93,9 +110,9 @@ const Home = () => {
           <div className="text">Error Occured!! Please Try later</div>
         </div> :
           <InfiniteScroll
-            dataLength={chars.length}
+            dataLength={data?.characters?.info.count}
             next={fetchMoreChars}
-            hasMore={page < 3 ? true : false}
+            hasMore={!completed ? true : false}
             loader={<div className="loaderContainer">
               <img src={loader} className="gif" alt="loader" />
               <div className="text">Loading...</div>
@@ -106,7 +123,7 @@ const Home = () => {
                 <div className="text">Yay! You have seen it all</div>
               </div>
             }
-            scrollThreshold={1}
+            scrollThreshold={0.9}
           >
             <div className="cardsContainer">
               {chars.length > 0 && (
