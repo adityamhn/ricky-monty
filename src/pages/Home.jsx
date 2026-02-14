@@ -153,14 +153,6 @@ const Home = () => {
               ))}
             </select>
           </div>
-          <a
-            href="https://www.adultswim.com/videos/rick-and-morty"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="officialSiteBtn"
-          >
-            Official Rick & Morty
-          </a>
         </div>
         {error ? <div className="loaderContainer">
           <img src={errorGif} className="gif" alt="error" />
