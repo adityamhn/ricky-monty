@@ -73,4 +73,31 @@
     .species {
         margin: 0.3rem 0rem;
     }
+
+    .viewCharacterBtn {
+        margin-top: 1rem;
+        padding: 0.5rem 1rem;
+        background-color: #3d7c47;
+        color: #f3f3f3;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+
+        &:hover {
+            background-color: #4a9a56;
+            transform: scale(1.02);
+        }
+
+        &:active {
+            transform: scale(0.98);
+        }
+
+        @media only screen and (max-width: 430px) {
+            font-size: 0.85rem;
+            padding: 0.45rem 0.85rem;
+        }
+    }
 }
