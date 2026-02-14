@@ -34,17 +34,6 @@ const Card = ({ character }) => {
                 </div>
             </div>
 
-            <button
-                type="button"
-                className="viewCharacterBtn"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/${id}`);
-                }}
-                aria-label={`View ${name}`}
-            >
-                View character
-            </button>
         </div >
     );
 };
