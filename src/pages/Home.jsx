@@ -16,8 +16,8 @@ import { useLocation } from 'react-router';
 
 //Query to get all Characters
 const getAllCharacters = gql`
-query Characters($page: Int, $name: String) {
-  characters(page:$page,filter : {name: $name}) {
+query Characters($page: Int, $name: String, $status: String, $species: String, $gender: String) {
+  characters(page:$page, filter: {name: $name, status: $status, species: $species, gender: $gender}) {
     info {
       next
       count
@@ -43,23 +43,54 @@ query Characters($page: Int, $name: String) {
 
 
 
+const FILTER_OPTIONS = {
+  status: [
+    { value: "", label: "All statuses" },
+    { value: "Alive", label: "Alive" },
+    { value: "Dead", label: "Dead" },
+    { value: "unknown", label: "Unknown" },
+  ],
+  species: [
+    { value: "", label: "All species" },
+    { value: "Human", label: "Human" },
+    { value: "Alien", label: "Alien" },
+    { value: "Humanoid", label: "Humanoid" },
+    { value: "Robot", label: "Robot" },
+    { value: "Animal", label: "Animal" },
+    { value: "Mythological Creature", label: "Mythological Creature" },
+    { value: "Cronenberg", label: "Cronenberg" },
+    { value: "Disease", label: "Disease" },
+    { value: "unknown", label: "Unknown" },
+  ],
+  gender: [
+    { value: "", label: "All genders" },
+    { value: "Male", label: "Male" },
+    { value: "Female", label: "Female" },
+    { value: "Genderless", label: "Genderless" },
+    { value: "unknown", label: "Unknown" },
+  ],
+};
+
 const Home = () => {
   const [chars, setChars] = useState([])
   const [page, setPage] = useState(1)
   const [searchterm, setSearchterm] = useState("")
+  const [statusFilter, setStatusFilter] = useState("")
+  const [speciesFilter, setSpeciesFilter] = useState("")
+  const [genderFilter, setGenderFilter] = useState("")
   const { pathname } = useLocation();
   const [completed, setCompleted] = useState(false)
 
-
-
-
-  const { loading, error, data, refetch } = useQuery(getAllCharacters, {
+  const { loading, error, data } = useQuery(getAllCharacters, {
     variables: {
       page: page,
-      name: searchterm || ""
+      name: searchterm || undefined,
+      status: statusFilter || undefined,
+      species: speciesFilter || undefined,
+      gender: genderFilter || undefined,
     },
     onCompleted: (data) => {
-      setChars(chars.concat(data.characters.results))
+      setChars((prev) => prev.concat(data.characters.results))
       if (!data.characters.info.next) {
         setCompleted(true)
       }
@@ -74,15 +105,21 @@ const Home = () => {
     setPage(0)
   }, [pathname])
 
-  useEffect(() => {
+  const resetFilters = () => {
     setPage(1)
     setChars([])
-    if (!searchterm) {
-      refetch({
-        name: ""
-      })
-    }
-  }, [searchterm])
+    setCompleted(false)
+  }
+
+  const handleSearchChange = (value) => {
+    setSearchterm(value)
+    resetFilters()
+  }
+
+  const handleFilterChange = (setter, value) => {
+    setter(value)
+    resetFilters()
+  }
 
   if (chars.length === 0 && !searchterm && loading) {
     return (
@@ -102,7 +139,39 @@ const Home = () => {
             <div className="iconContainer">
               <GoSearch className="icon" />
             </div>
-            <input className="searchfield" placeholder="Search for Ricky Monty characters" value={searchterm} onChange={(e) => setSearchterm(e.target.value || "")} />
+            <input className="searchfield" placeholder="Search for Ricky Monty characters" value={searchterm} onChange={(e) => handleSearchChange(e.target.value || "")} />
+          </div>
+          <div className="filterContainer">
+            <select
+              className="filterSelect"
+              value={statusFilter}
+              onChange={(e) => handleFilterChange(setStatusFilter, e.target.value)}
+              aria-label="Filter by status"
+            >
+              {FILTER_OPTIONS.status.map((opt) => (
+                <option key={opt.value || "all"} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+            <select
+              className="filterSelect"
+              value={speciesFilter}
+              onChange={(e) => handleFilterChange(setSpeciesFilter, e.target.value)}
+              aria-label="Filter by species"
+            >
+              {FILTER_OPTIONS.species.map((opt) => (
+                <option key={opt.value || "all"} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+            <select
+              className="filterSelect"
+              value={genderFilter}
+              onChange={(e) => handleFilterChange(setGenderFilter, e.target.value)}
+              aria-label="Filter by gender"
+            >
+              {FILTER_OPTIONS.gender.map((opt) => (
+                <option key={opt.value || "all"} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
           </div>
         </div>
         {error ? <div className="loaderContainer">
