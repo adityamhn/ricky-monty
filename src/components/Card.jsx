@@ -34,16 +34,6 @@ const Card = ({ character }) => {
                 </div>
             </div>
 
-            <button
-                type="button"
-                className="viewCharacterBtn"
-                onClick={(e) => {
-                    e.stopPropagation();
-                    navigate(`/${id}`);
-                }}
-            >
-                View character
-            </button>
         </div >
     );
 };
