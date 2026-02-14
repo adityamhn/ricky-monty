@@ -77,6 +77,30 @@
                 }
             }
         }
+
+        .officialSiteBtn {
+            margin-top: 1rem;
+            padding: 0.5rem 1.25rem;
+            background-color: #97ce4c;
+            color: #1d1d1d;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+
+            &:hover {
+                background-color: #b8e06c;
+                transform: scale(1.03);
+            }
+
+            &:active {
+                transform: scale(0.98);
+            }
+        }
     }
 
     .cardsContainer {
