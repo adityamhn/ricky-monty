@@ -3,7 +3,7 @@ import '../styles/Home.scss'
 import { GoSearch } from "react-icons/go"
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Card from '../components/Card';
-import { useQuery, gql } from '@apollo/client';
+import { getCharacters } from '../data/mockCharacters';
 
 //images
 import logo from '../assets/images/logo.png'
@@ -11,35 +11,6 @@ import loader from '../assets/images/loader.gif'
 import end from '../assets/images/end.gif'
 import errorGif from '../assets/images/error.gif'
 import { useLocation } from 'react-router';
-
-
-
-//Query to get all Characters
-const getAllCharacters = gql`
-query Characters($page: Int, $name: String, $status: String, $species: String, $gender: String) {
-  characters(page:$page, filter: {name: $name, status: $status, species: $species, gender: $gender}) {
-    info {
-      next
-      count
-    }
-    results  {
-      id
-      name
-      status
-      species
-      type
-      gender
-      origin {
-        id 
-        name
-        type
-        dimension
-      }
-      image
-    }
-  }
-}
-`;
 
 
 
@@ -80,29 +51,38 @@ const Home = () => {
   const [genderFilter, setGenderFilter] = useState("")
   const { pathname } = useLocation();
   const [completed, setCompleted] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const { loading, error, data } = useQuery(getAllCharacters, {
-    variables: {
-      page: page,
-      name: searchterm || undefined,
-      status: statusFilter || undefined,
-      species: speciesFilter || undefined,
-      gender: genderFilter || undefined,
-    },
-    onCompleted: (data) => {
-      setChars((prev) => prev.concat(data.characters.results))
-      if (!data.characters.info.next) {
-        setCompleted(true)
+  useEffect(() => {
+    setLoading(true)
+    setError(null)
+    const timer = setTimeout(() => {
+      try {
+        const { characters } = getCharacters({
+          page,
+          name: searchterm || "",
+          status: statusFilter || "",
+          species: speciesFilter || "",
+          gender: genderFilter || "",
+        })
+        setChars((prev) => (page === 1 ? characters.results : prev.concat(characters.results)))
+        setCompleted(!characters.info.next)
+      } catch (err) {
+        setError(err)
+      } finally {
+        setLoading(false)
       }
-    }
-  });
+    }, 300)
+    return () => clearTimeout(timer)
+  }, [page, searchterm, statusFilter, speciesFilter, genderFilter])
 
   const fetchMoreChars = () => {
     setPage(prev => prev + 1)
   }
 
   useEffect(() => {
-    setPage(0)
+    setPage(1)
   }, [pathname])
 
   const resetFilters = () => {
@@ -121,7 +101,7 @@ const Home = () => {
     resetFilters()
   }
 
-  if (chars.length === 0 && !searchterm && loading) {
+  if (chars.length === 0 && loading) {
     return (
       <div className="loaderContainer">
         <img src={loader} className="gif" alt="loader" />
@@ -179,7 +159,7 @@ const Home = () => {
           <div className="text">Error Occured!! Please Try later</div>
         </div> :
           <InfiniteScroll
-            dataLength={data?.characters?.info.count}
+            dataLength={chars.length}
             next={fetchMoreChars}
             hasMore={!completed ? true : false}
             loader={<div className="loaderContainer">
@@ -197,8 +177,8 @@ const Home = () => {
             <div className="cardsContainer">
               {chars.length > 0 && (
                 <>
-                  {chars?.map((character, index) => (
-                    <Card key={index} character={character} />
+                  {chars?.map((character) => (
+                    <Card key={character.id} character={character} />
                   ))}
                 </>
               )}
